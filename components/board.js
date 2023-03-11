@@ -25,11 +25,11 @@ const inProgressList = [
   {
     text: 'Guardando datos en base de datos',
     id: 'task-5'
-  },
+  }/*,
   {
     text: 'Implementando el inicio de sesión',
     id: 'task-6'
-  }
+  }*/
 ]
 
 const doneList = [
@@ -48,13 +48,15 @@ const doneList = [
 ]
 
 export default function Board() {
+  const [dragged, setDragged] = useState(null)
+
   const [ listOfList, setListOfList ] = useState({
     todoList,
     inProgressList,
     doneList
   })
 
-  useEffect(() => {
+  /*useEffect(() => {
     setTimeout(() => {
       const listOfListClone = structuredClone(listOfList)
       listOfListClone.inProgressList.push({
@@ -63,30 +65,52 @@ export default function Board() {
       })
       setListOfList(listOfListClone)
     },5000)
-  })
+  })*/
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+
+    const listOfListClone = structuredClone(listOfList)
+    listOfListClone.inProgressList.push(dragged)
+    setListOfList(listOfListClone)
+
+    console.log('Drop event', e.target)
+  }
 
   return (
     <div className="p-4">
       <h1 className="text-3xl font-bold mb-4">Development</h1>
       <main className="flex justify-between gap-4">
-        <List name="TODO">
+        <List 
+          name="TODO" 
+          handleDrop={handleDrop}
+          id={'todo'} 
+        >
           {
             listOfList.todoList.map( (item) => (
-              <Card {...item} key={item.id}/>
+              <Card setDragged={setDragged} {...item} key={item.id}/>
             ))
           }
         </List>
-        <List name="In Progress">
+        <List 
+          name="In Progress" 
+          handleDrop={handleDrop}
+          id={'inprogress'} 
+        >
           {
             listOfList.inProgressList.map( (item, index) => (
-              <Card {...item} key={item.id}/>
+              <Card setDragged={setDragged} {...item} key={item.id}/>
             ))
           }
         </List>
-        <List name="Done">
+        <List 
+          name="Done" 
+          handleDrop={handleDrop}
+          id={'done'} 
+        >
           {
             listOfList.doneList.map( (item, index) => (
-              <Card {...item} key={item.id}/>
+              <Card setDragged={setDragged} {...item} key={item.id}/>
             ))
           }
         </List>
