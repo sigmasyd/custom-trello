@@ -22,14 +22,17 @@ export default function Board() {
     let listaDestino = e.target.dataset.list
     // obtengo la lista origen directamente desde el card
     let listaOrigen = dragged.list
-    // agrego a la lista destino el card
-    listOfListClone[listaDestino].push(dragged.data)
-    // guardo en lista temporal la lista removiendo la card
-    let listaTmp = listOfListClone[listaOrigen].filter( item => item.id + '' !== dragged.data.id )
-    // actualizo la lista origen con el nuevo listado de cards
-    listOfListClone[dragged.list] = listaTmp
-    // actualizo estado de cards
-    setListOfList(listOfListClone)
+
+    if (listaDestino) {
+      // agrego a la lista destino el card
+      listOfListClone[listaDestino]?.push(dragged.data)
+      // guardo en lista temporal la lista removiendo la card
+      let listaTmp = listOfListClone[listaOrigen].filter( item => item.id + '' !== dragged.data.id )
+      // actualizo la lista origen con el nuevo listado de cards
+      listOfListClone[dragged.list] = listaTmp
+      // actualizo estado de cards
+      setListOfList(listOfListClone)
+    }
   }
 
   return (
