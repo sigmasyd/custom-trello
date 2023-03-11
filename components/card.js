@@ -1,13 +1,18 @@
 import React from 'react'
 import Image from 'next/image'
 
-export default function Card({ text, id, setDragged }) {
-  const handleDragStart = () => {
+export default function Card({ text, id, setDragged, list }) {
+  const handleDragStart = (e) => {
     setDragged({
-      text,
-      id
+      data: {
+        text,
+        id
+      },
+      // funciona pero no da buena espina, prefiero enviar como prop
+      // al card desde el Board
+      //list: e.target.closest('[data-list]').dataset.list
+      list: list
     })
-    console.log(id)
   }
   
   return (

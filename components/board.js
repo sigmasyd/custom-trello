@@ -56,25 +56,23 @@ export default function Board() {
     doneList
   })
 
-  /*useEffect(() => {
-    setTimeout(() => {
-      const listOfListClone = structuredClone(listOfList)
-      listOfListClone.inProgressList.push({
-        text: 'ola k ase',
-        id: crypto.randomUUID()
-      })
-      setListOfList(listOfListClone)
-    },5000)
-  })*/
-
   const handleDrop = (e) => {
     e.preventDefault()
-
-    const listOfListClone = structuredClone(listOfList)
-    listOfListClone.inProgressList.push(dragged)
+    // clono lista para mantener principio de inmutabilidad
+    const listOfListClone = structuredClone(listOfList)    
+    // obtengo la lista destino desde e.target, aunque tanto currentTarget como target 
+    // devuelven el mismo destino:  e.currentTarget.dataset.list
+    let listaDestino = e.target.dataset.list
+    // obtengo la lista origen directamente desde el card
+    let listaOrigen = dragged.list
+    // agrego a la lista destino el card
+    listOfListClone[listaDestino].push(dragged.data)
+    // guardo en lista temporal la lista removiendo la card
+    let listaTmp = listOfListClone[listaOrigen].filter( item => item.id + '' !== dragged.data.id )
+    // actualizo la lista origen con el nuevo listado de cards
+    listOfListClone[dragged.list] = listaTmp
+    // actualizo estado de cards
     setListOfList(listOfListClone)
-
-    console.log('Drop event', e.target)
   }
 
   return (
@@ -84,33 +82,33 @@ export default function Board() {
         <List 
           name="TODO" 
           handleDrop={handleDrop}
-          id={'todo'} 
+          id="todoList"
         >
           {
             listOfList.todoList.map( (item) => (
-              <Card setDragged={setDragged} {...item} key={item.id}/>
+              <Card list="todoList" setDragged={setDragged} {...item} key={item.id}/>
             ))
           }
         </List>
         <List 
           name="In Progress" 
           handleDrop={handleDrop}
-          id={'inprogress'} 
+          id="inProgressList"
         >
           {
             listOfList.inProgressList.map( (item, index) => (
-              <Card setDragged={setDragged} {...item} key={item.id}/>
+              <Card list="inProgressList" setDragged={setDragged} {...item} key={item.id}/>
             ))
           }
         </List>
         <List 
           name="Done" 
           handleDrop={handleDrop}
-          id={'done'} 
+          id="doneList"
         >
           {
             listOfList.doneList.map( (item, index) => (
-              <Card setDragged={setDragged} {...item} key={item.id}/>
+              <Card list="inProgressList" setDragged={setDragged} {...item} key={item.id}/>
             ))
           }
         </List>
